@@ -1,9 +1,20 @@
+require 'colorize'
+
 desc 'Get the next clue'
 task :clue => 'adventures:clue'
 
 namespace :adventures do
-
   task :clue => :header do
+    passing = system('rspec > /dev/null')
+
+    if passing
+      Rake::Task['adventures:continue'].invoke
+    else
+      Rake::Task['adventures:intro'].invoke
+    end
+  end
+
+  task :intro do
     puts " The evil  Lord Waterfall,  bent on  destroying  all XP  practices has"
     puts " deleted  all your  code. Luckily  for you  he didn't  see the  'spec'"
     puts " folder, so not all is lost! "
@@ -19,6 +30,15 @@ namespace :adventures do
     puts
   end
 
+  task :continue do
+    puts " Well done, have made the tests pass, but it wont be so easy next time!"
+    puts " To continue type:"
+    puts "   git merge feature/counting_sheep".yellow
+    puts
+    puts " followed by:"
+    puts "   rake clue"
+    puts
+  end
 
   task :header do
     puts
